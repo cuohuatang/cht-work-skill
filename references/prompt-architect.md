@@ -158,3 +158,12 @@ V0.04 版本号；四处文件落点；一条 feat(v0.04) 提交；仓库可见�
 | V0.02 | 技能发现 优先搜索现成 skill 复用 / github push create repository skill | 0.050 / 0.050 | < 0.60，自主完成迭代 |
 | V0.03 | 提示词架构师 优化提示词 两版本 多智能体适配 / prompt architect optimize user prompt two versions multi agent | 0.050 / 0.050 | < 0.60，自主完成迭代 |
 | **V0.04** | 提示词优化 禁止优化 闲聊分类 硬性规则 / prompt optimization skip casual chat hard constraint classification | 0.050 / 0.050 | < 0.60，自主完成迭代 |
+| **V0.05** | 微软 UFO2 Desktop AgentOS HostAgent AppAgent 架构编排 知识沉淀 / UFO2 AgentOS hybrid GUI API task DAG orchestration skill | 0.050 / 0.050 | < 0.60，自主完成迭代 |
+
+## 9. V0.05 衔接补充（第四步执行编排）
+
+V0.05 在主 `SKILL.md` 新增「第四步 · 执行编排」（嫁接微软 UFO² / UFO³ 范式）。第一步的职责与硬约束**完全不变**，只有衔接对象多了一处：
+
+- 优化后的提示词仍是**全流程唯一输入**：第二步取检索关键词、第三步定素材与交付格式、**第四步按高阶顶配版里的「任务拆解 + 输出规格 + 验收清单」拆任务图并定验收口径**。
+- 命中禁止优化清单时，第一、二步跳过；第四步对一步能做完的活也不启用 DAG，直接执行（见 `references/ufo-execution-paradigm.md` 的适用范围两档表）。
+- 本轮两版提示词、隐性需求补齐、已规避漏洞与检索留痕见 `references/ufo-execution-paradigm.md` 第 6 节；本文件第 8 节保留 V0.04 的历史留痕，不覆盖。

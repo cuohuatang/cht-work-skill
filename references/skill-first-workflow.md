@@ -1,4 +1,4 @@
-# 任务前置分流细则（V0.02 嫁接 / V0.03 顺延第二步 / V0.04 对齐禁止优化硬约束）
+# 任务前置分流细则（V0.02 嫁接 / V0.03 顺延第二步 / V0.04 对齐禁止优化硬约束 / V0.05 衔接第四步执行编排）
 
 配套主 `SKILL.md` 的「第二步」。目标：**别重复造轮子**，以及**别把闲聊也拿去检索**。
 
@@ -71,6 +71,15 @@ curl -s "https://lightmake.site/api/v1/search?q=<URL编码后的优化需求>&li
 | V0.02 | 技能发现 优先搜索现成 skill 复用 / github push create repository skill | 0.050 / 0.050 | < 0.60，自主完成迭代 |
 | V0.03 | 提示词架构师 优化提示词 两版本 多智能体适配 / prompt architect optimize user prompt two versions multi agent | 0.050 / 0.050 | < 0.60，自主完成迭代 |
 | V0.04 | 提示词优化 禁止优化 闲聊分类 硬性规则 / prompt optimization skip casual chat hard constraint classification | 0.050 / 0.050 | < 0.60，自主完成迭代 |
+| **V0.05** | 微软 UFO2 Desktop AgentOS HostAgent AppAgent 架构编排 知识沉淀 / UFO2 AgentOS hybrid GUI API task DAG orchestration skill | 0.050 / 0.050 | < 0.60，自主完成迭代 |
+
+## 7. V0.05 衔接补充
+
+主 `SKILL.md` 新增「第四步 · 执行编排」（UFO² / UFO³ 范式）。本步骤（第二步检索）的职责与阈值表**完全不变**，补充两点衔接：
+
+1. **新任务域单独检索**：V0.05 本轮把「桌面 Agent 编排范式」当作新任务域，按第 5 节第 2 条单独检索一次（两组关键词最高 score 均 0.050），结论为自主实现。该留痕同时写入 `references/ufo-execution-paradigm.md` 第 6 节。
+2. **非 PPT 路由域的判定要留痕**：本轮属技能自迭代 / 嫁接新能力，不落第三步的网页 PPT 路由表，按主文件第三步说明走自主实现路径，并把「不属于 PPT 路由域」写进留痕，避免为凑流程强套 A / B 路线。
+3. 第二步产出的「检索结论 + 优化后的高阶顶配版」一并作为第四步拆任务图、定验收口径的输入；细则见 `references/ufo-execution-paradigm.md`。
 
 ## 5. 例外与边界
 
