@@ -1,6 +1,36 @@
 # cht-work-skill
 
+> **当前版本：V0.02** ｜ V0.01 合并两技能，V0.02 嫁接「先复用现成技能、后自主实现」的任务前置分流。
+
 把两个高星网页 PPT 技能合并成一个入口：**有旧 PPT 就翻新，没旧 PPT 就从零做**。
+
+## V0.02 新增：任务前置分流
+
+接到**任务型请求**时，先用全局 `find-skills` 做语义检索，按相似度决定复用还是自造；**闲聊、纯问答、延续性对话不检索**。
+
+```
+消息进来 → 是任务型请求？（生成/安装/修复/转换/推送/产出文件）
+  否 → 直接回答或执行，不检索
+  是 → find-skills 语义检索 → 最高 score
+        ≥ 0.90  直接复用现成技能，不自造
+        0.60~0.90  列候选，用户点名才用
+        < 0.60  无现成技能，自主实现并留痕
+```
+
+| 不检索 | 要检索 |
+| --- | --- |
+| 寒暄、致谢、闲聊 | 生成 PPT / 网页 / 文件 |
+| 事实问答、翻译、摘要已有文本 | 安装技能、修复、转换格式 |
+| 「继续」「换成蓝色」等延续性修改 | 推送仓库、分析并产出报告 |
+| 用户已点名技能或文件 | 冒出的新任务域（单独检索） |
+
+已明确落在网页 PPT 域时，本仓库 A / B 两条路线就是现成能力，直接进入选路线，不重复检索。细则见 `references/skill-first-workflow.md`，前置依赖 `find-skills` 需全局安装：
+
+```bash
+grep -rl "^name: find-skills" ~/.codebuddy/skills/*/SKILL.md
+```
+
+> V0.02 实测留痕：两组检索最高 score 均为 0.050（< 0.60），判定无高相似现成技能，故自主完成本次迭代。
 
 | | 路线 A · frontend-slides | 路线 B · guizang-ppt-skill |
 | --- | --- | --- |
@@ -51,8 +81,10 @@ grep -rl "^name: cht-work-skill" ~/.codebuddy/skills/*/SKILL.md
 
 ```
 cht-work-skill/
-├── SKILL.md                      # 合并入口：路由决策 + 通用规则 + 两条路线要点
+├── SKILL.md                      # 合并入口：第零步分流 + 路由决策 + 两条路线要点
 ├── README.md                     # 本文件
+├── references/
+│   └── skill-first-workflow.md   # V0.02 任务前置分流细则
 ├── frontend-slides/              # 上游完整副本（MIT）
 │   ├── SKILL.md
 │   ├── STYLE_PRESETS.md
