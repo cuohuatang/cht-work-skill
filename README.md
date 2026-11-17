@@ -1,6 +1,8 @@
 # cht-work-skill
 
-> **当前版本：V0.05** ｜ V0.01 合并两技能 → V0.02 嫁接「先复用后自造」→ V0.03 把「提示词优化」前置为第一步 → V0.04 把「禁止优化」升级为硬约束 → **V0.05 嫁接微软 UFO² / UFO³ 执行编排范式作为第四步**。
+> **当前版本：V0.06** ｜ V0.01 合并两技能 → V0.02 嫁接「先复用后自造」→ V0.03 把「提示词优化」前置为第一步 → V0.04 把「禁止优化」升级为硬约束 → V0.05 嫁接微软 UFO² / UFO³ 执行编排范式作为第四步 → **V0.06 嫁接「人在回路视觉反馈工具路由」作为第五步（Pinta / Inspecto / human-review / EditHere）**。
+
+> **形态说明**：本技能**保持 Skill 形态，不改成 MCP**。它是决策 / 编排层，MCP 是工具 / 能力层，两者是上下游；四工具形态不统一，无一要求本技能转型。理由见文末与 `references/visual-feedback-routing.md` 第 6 节。
 
 把两个高星网页 PPT 技能合并成一个入口：**有旧 PPT 就翻新，没旧 PPT 就从零做**。现在还顺手解决另外两个问题：**不会写提示词也能让 AI 干活，但不是所有输入都要优化提示词**；以及**选定方案之后怎么把活可靠地干完**（第四步执行编排）。
 
@@ -24,11 +26,34 @@
    ↓
 第四步 · 执行编排（V0.05 · UFO²/UFO³ 范式）
    两层分工 ｜ 脚本/API 优先、界面兜底 ｜ 批量并行动作 ｜ 复合任务 DAG
-   ↓
-四阶段闭环：采集 → 决策 → 执行 → 记忆更新（留痕回写）
+   ↓ 四阶段闭环：采集 → 决策 → 执行 → 记忆更新（留痕回写）
+第五步 · 人在回路视觉反馈路由（V0.06，可选）
+   前端源码 → Pinta ｜ 进阶跳行/时间线 → Inspecto
+   网页/PPT/Word/图片文档 → human-review ｜ 一切画面 → EditHere
 ```
 
-前三步解决「做什么、用什么、走哪条」，第四步解决「怎么把它可靠地干完、干完怎么沉淀」。
+前三步解决「做什么、用什么、走哪条」，第四步解决「怎么把它可靠地干完、干完怎么沉淀」，第五步解决「做完后怎么让人圈一下就能改」。
+
+## V0.06 新增：第五步人在回路视觉反馈路由
+
+**只在用户要审改 / 走查 / 圈选反馈时启用**，不装下列工具不影响 PPT 主流程。
+
+| 改什么 | 用什么 | 形态与要点 |
+| --- | --- | --- |
+| 前端源码 / 网页 UI（点选 + 写人话 + Agent 改源码） | **Pinta（主力）** | Chrome 扩展 + `pinta-companion`（127.0.0.1:7878）+ MCP；`Alt+S` 圈选 → 批注 → Send to agent；零框架侵入、localhost 私有、不挑 Agent |
+| 前端 + 跳源码行 / 任务时间线 / 自定义工作流 | **Inspecto（进阶补位）** | `Alt+点击` 跳行、session 时间线（领取/处理/完成/忽略）、`prompts.json` 自定义按钮；只在需要这三项时才上 |
+| 网页 / PPT / Word / 图片文档逐段审改 | **human-review** | MIT Skill；`npx -y human-review <file|localhost>` 浏览器直接改字圈选，一次 Send 回传；Markdown 改动由 Agent 应用回源文件 |
+| 一切画面（截图 / AI 生图 / 视频 / 游戏 HUD / 桌面 UI） | **EditHere** | MIT 桌面应用 + companion skill；原图保留，编号批注 + 坐标 + 布局变化进 JSON；不绑模型不绑 DOM |
+
+**三条硬规则**：
+
+1. **文档类不走 Pinta / Inspecto** —— 它俩只处理前端 DOM / 组件；PPT / Word / Markdown / 图片一律走 human-review 或 EditHere。
+2. **Pinta 不是 GTK 画图软件** —— 此处指网页批注工具（`pinta-companion` / `pinta-mcp`），不是 `PintaProject/Pinta`。
+3. **主力 / 进阶分明** —— 默认 Pinta，只有明确要跳源码行 / 时间线 / 自定义工作流才升级 Inspecto。
+
+> **MCP 判定**：原 cht-work-skill **不改成 MCP**。它是决策 / 编排层（六步工作流），MCP 是工具 / 能力层，二者上下游而非替代；Pinta/Inspecto 自带 MCP server、human-review 本身是 Skill、EditHere 是桌面应用，四者形态不统一，无一要求调用方转型；改成 MCP 还会丢掉「不挑 Agent」的跨智能体适配。路由表完整接入命令、闭环方式、MCP 判定四条依据见 `references/visual-feedback-routing.md`。
+
+> V0.06 实测留痕：本条属任务型（下任务 + 转换 + 迭代升级），未命中禁止清单，且**不属于网页 PPT 路由域**；两组检索最高 score 均 0.050（< 0.60），无高相似现成技能，故自主完成迭代。
 
 ## V0.05 新增：第四步执行编排（嫁接微软 UFO 系列）
 
@@ -169,12 +194,13 @@ grep -rl "^name: cht-work-skill" ~/.codebuddy/skills/*/SKILL.md
 
 ```
 cht-work-skill/
-├── SKILL.md                      # 主入口：禁止优化硬约束 + 四步流程 + 两条路线要点
+├── SKILL.md                      # 主入口：禁止优化硬约束 + 五步流程 + 两条路线要点
 ├── README.md                     # 本文件
 ├── references/
 │   ├── prompt-architect.md       # 第一步细则：元提示词原文、禁止优化清单、两版模板、漏洞清单
 │   ├── skill-first-workflow.md   # 第二步细则：对话分类、阈值判定、留痕格式
-│   └── ufo-execution-paradigm.md # 第四步细则（V0.05）：UFO²/UFO³ 术语、转译表、诚实边界、实跑留痕
+│   ├── ufo-execution-paradigm.md # 第四步细则（V0.05）：UFO²/UFO³ 术语、转译表、诚实边界、实跑留痕
+│   └── visual-feedback-routing.md# 第五步细则（V0.06）：Pinta/Inspecto/human-review/EditHere 路由、接入命令、MCP 判定
 ├── frontend-slides/              # 上游完整副本（MIT）
 │   ├── SKILL.md
 │   ├── STYLE_PRESETS.md
@@ -192,7 +218,7 @@ cht-work-skill/
     └── LICENSE
 ```
 
-两个子技能的 `SKILL.md` 及其相对路径引用都保持原样，**执行时以各自子目录为路径基准**。UFO 相关只落一份 Markdown 范式笔记，**没有复制任何 UFO 代码**。
+两个子技能的 `SKILL.md` 及其相对路径引用都保持原样，**执行时以各自子目录为路径基准**。UFO 相关只落一份 Markdown 范式笔记，**没有复制任何 UFO 代码**；第五步四个工具同样只记路由与官方接入方式，**未复制其代码、不内置其运行时**。
 
 ## 常见坑（都写进主 SKILL.md 了）
 
@@ -206,6 +232,9 @@ cht-work-skill/
 8. 导出 PDF 是逐页截图，动画和编辑功能都会丢失。
 9. 别把 UFO 当成本技能的能力：它只是第四步的编排范式来源，UIA / WinCOM / OmniParser 一个都没引入。
 10. 别给一步能做完的活上 DAG：单一交付物直接执行，复合任务才拆任务图。
+11. 别把 Pinta 当 GTK 画图软件：此处是网页批注工具（companion + MCP），`PintaProject/Pinta` 是同名不同物。
+12. 别把文档类塞给前端工具：PPT / Word / Markdown / 图片走 human-review 或 EditHere，不走 Pinta / Inspecto。
+13. 别为了「高级」把本技能改成 MCP：决策层与工具层是上下游，四工具形态也不统一。
 
 ## 许可说明
 
@@ -216,5 +245,6 @@ cht-work-skill/
 | `frontend-slides/` | MIT | 完整副本，含 scripts / assets / references |
 | `guizang-ppt-skill/` | AGPL-3.0 | 完整副本，含 scripts / assets / references；修改或再分发须遵守其对应义务（含源码开放要求） |
 | <https://github.com/microsoft/UFO> · <https://microsoft.github.io/UFO/ufo2/overview/> | MIT | **仅方法论借鉴，未复制任何代码**，仅作范式来源标注 |
+| Pinta（`pinta-companion` / `pinta-mcp`）· Inspecto · <https://github.com/petergyang/human-review>（MIT）· <https://github.com/Inginnng/EditHere>（MIT） | 见各上游 | **仅路由与官方接入命令说明，未复制代码、未内置运行时**；是否安装由用户决定 |
 
-各子目录内的 LICENSE、README、SPONSORS 与来源说明均原样保留。UFO 相关商标归微软所有。
+各子目录内的 LICENSE、README、SPONSORS 与来源说明均原样保留。UFO 相关商标归微软所有。第五步四工具的商标与名称归各自作者所有，本仓库仅作工具路由的来源标注。

@@ -1,11 +1,13 @@
 ---
 name: cht-work-skill
-description: 把内容做成有动效、有设计感的单文件网页 PPT（HTML 演示文稿），并内置「先优化提示词 → 再复用现成技能 → 后自主实现」的完整工作流。第一步用顶级 AI 提示词架构师元提示词把用户口语需求优化成精简通用版与高阶顶配版两版结构化提示词，补齐隐性需求、适配所有智能体、规避逻辑漏洞；**但有硬性禁止优化清单**：寒暄致谢、纯事实问答 / 翻译 / 摘要、延续性修改（继续 / 换成蓝色）、用户已点名技能或文件、只要判断不要产出，命中即禁止优化、禁止输出两版模板、直接执行。只有任务型（下任务、归纳总结、生成、安装、修复、转换、推送、产出文件等重要任务）才优化。第二步用优化后的提示词检索相似度≥0.90 的现成技能复用；第三步选路线：有旧 PPT/PPTX 用 frontend-slides，没有旧稿用 guizang-ppt-skill。第四步按 UFO²/UFO³ 桌面 Agent 编排范式执行：两层分工、混合 GUI–API（脚本/API 优先、界面兜底）、推测式批量动作、四阶段闭环与复合任务 DAG，并回写留痕。两条路线交付的都是 HTML 不是 pptx，若用户明确要 .pptx 先提醒格式冲突。
+description: 把内容做成有动效、有设计感的单文件网页 PPT（HTML 演示文稿），内置「先优化提示词 → 再复用现成技能 → 后自主实现 → 执行编排 → 人在回路反馈」完整工作流，并在交付后按任务类型路由到视觉反馈工具（前端源码改动用 Pinta，进阶跳源码行/时间线/自定义工作流用 Inspecto，网页/PPT/Word/图片文档审改用 human-review，一切画面含截图/AI 生图/视频/游戏 HUD 用 EditHere）。第一步用顶级 AI 提示词架构师元提示词把用户口语需求优化成精简通用版与高阶顶配版两版结构化提示词，补齐隐性需求、适配所有智能体、规避逻辑漏洞；**但有硬性禁止优化清单**：寒暄致谢、纯事实问答 / 翻译 / 摘要、延续性修改（继续 / 换成蓝色）、用户已点名技能或文件、只要判断不要产出，命中即禁止优化、禁止输出两版模板、直接执行。只有任务型（下任务、归纳总结、生成、安装、修复、转换、推送、产出文件等重要任务）才优化。第二步用优化后的提示词检索相似度≥0.90 的现成技能复用；第三步选路线：有旧 PPT/PPTX 用 frontend-slides，没有旧稿用 guizang-ppt-skill。第四步按 UFO²/UFO³ 桌面 Agent 编排范式执行：两层分工、混合 GUI–API（脚本/API 优先、界面兜底）、推测式批量动作、四阶段闭环与复合任务 DAG，并回写留痕。两条路线交付的都是 HTML 不是 pptx，若用户明确要 .pptx 先提醒格式冲突。
 ---
 
 # CHT Work Skill · 网页 PPT 二合一
 
-> **版本：V0.05**（V0.01 合并两技能；V0.02 嫁接任务前置分流；V0.03 把提示词优化前置为第一步；V0.04 把「禁止优化」升级为硬约束并修正分类边界；**V0.05 嫁接微软 UFO² / UFO³ 执行编排范式，作为第四步执行层**）
+> **版本：V0.06**（V0.01 合并两技能；V0.02 嫁接任务前置分流；V0.03 把提示词优化前置为第一步；V0.04 把「禁止优化」升级为硬约束并修正分类边界；V0.05 嫁接微软 UFO² / UFO³ 执行编排范式作为第四步执行层；**V0.06 嫁接「人在回路视觉反馈工具路由」作为第五步：Pinta / Inspecto / human-review / EditHere**）
+
+> **形态判定（V0.06）**：本技能**保持 Skill 形态，不改成 MCP**。它是决策 / 编排层（提示词优化、任务分流、路线选择、执行编排、反馈路由），MCP 是工具 / 能力层；两者是上下游，不是替代。Pinta / Inspecto 自带 MCP server、human-review 本身是 Skill、EditHere 是桌面应用 + companion skill，四者形态不统一，无一要求本技能转型。详见 `references/visual-feedback-routing.md` 第 6 节。
 
 一个入口，两条路线。把内容做成浏览器直接放映、会动、不像 AI 模板的演示文稿。
 
@@ -167,6 +169,37 @@ description: 把内容做成有动效、有设计感的单文件网页 PPT（HTM
 - UFO 是 Windows 桌面自动化框架，本技能是网页演示文稿工作流，技术栈无交集；嫁接的是「拆任务、排顺序、选执行手段、失败恢复、沉淀经验」这套平台无关的章法。
 - **两条 PPT 路线仍是唯一交付主体**，第四步不改变它们的版式规则、配色约束与许可义务；UFO 链接仅作范式来源标注。
 
+## 第五步 · 人在回路视觉反馈路由（V0.06 嫁接）
+
+> 前四步解决「怎么做出来」，第五步解决「**做出来后让人用鼠标圈一下就能改**」。本步**只在用户要求审改 / 走查 / 圈选反馈时启用**，首发交付不强制走。完整接入命令、路由判定表、MCP 形态说明见 `references/visual-feedback-routing.md`。
+
+### 一句话路由（先记这个）
+
+| 用户要改的东西 | 用哪个 | 形态 |
+| --- | --- | --- |
+| **前端源码 / 网页 UI**（点元素、说人话、Agent 改源码） | **Pinta（主力）** | Chrome 扩展 + `pinta-companion`（本机 7878）+ Pinta MCP |
+| 前端又要**跳源码行 + 任务时间线 + 自定义工作流** | **Inspecto（进阶补位）** | 一条安装命令 + MCP + `prompts.json` |
+| **网页 / PPT / Word / 图片文档**逐段审改、原位批注 | **human-review** | Skill + `npx human-review`，浏览器直接改字 / 圈选留言 |
+| **一切画面**：截图、AI 生图、视频帧、游戏 HUD、桌面 UI | **EditHere** | 桌面应用（Qt）+ companion skill + `edithere-cli`，导出坐标 JSON |
+| 以上都不是（纯文档、纯代码逻辑、无视觉对象） | **都不用**，直接文字反馈 | — |
+
+### 三条硬规则
+
+1. **文档类不走 Pinta / Inspecto**：这两个是「前端源码 → 批注 → 改代码」链路，只处理 DOM / 组件。PPT、Word、Markdown、图片文档一律走 human-review（文字 / 网页类）或 EditHere（画面类）。这是它们能力边界，不是偏好。
+2. **Pinta 不是画图软件**：名字撞车。此处指 Chrome 扩展 + 本地 companion + MCP 的网页批注工具（`npx pinta-companion .`、`codex mcp add pinta -- npx -y -p pinta-companion pinta-mcp`），**不是** `PintaProject/Pinta` 那个 GTK 绘图程序。检索与安装时认准 companion / MCP 关键词。
+3. **主力 / 进阶分明**：默认 Pinta；只有当需求明确包含「跳到源码行」「看 Agent 处理时间线」「自定义 workflow 按钮（Deploy Preview / Review & PR）」时**才升级到 Inspecto**。前端工程化更舒服，但别一上来就上重工具。
+
+### human-review / EditHere 的分工（按你的口径固化）
+
+- **human-review 管网页文档**：HTML、Markdown、localhost 页面——用户直接在浏览器里改字、加粗、拖动图片、选中短语留言，点 Send 一次性回传。命令：`npx -y human-review <file.html|http://localhost:...>`，收尾用 `npx -y human-review poll <file>` 阻塞等反馈。
+- **EditHere 管一切画面**：截图批注、原图不覆盖、坐标与布局变化进 JSON；不绑模型、不绑 DOM，网页 / 桌面 / 游戏 / AI 生图 / 视频都能标。**PPT / Word 的画面呈现问题**（对齐、配色、图文位置）用 EditHere 截图批注；**文字内容审改**用 human-review。
+
+### 与本技能既有能力的关系
+
+- 二者是**交付后的反馈回路**，不替代前四步：先用 A / B 路线生成 HTML 演示，再按需把成品交给 human-review 审改、或用 EditHere 对画面提意见。
+- **闭环**：工具导出批注 → Agent 读取 → 回到第一步（若需重新优化需求）→ 第三步选路线 → 第四步执行修改 → 再交回工具复审。这条正好落在 UFO 四阶段闭环的「记忆更新」上。
+- **可选项**：这些工具都不是本技能的运行时依赖，**未安装不影响 PPT 生成**；只在用户明确要视觉反馈回路时才提示安装。
+
 ## 通用执行规则
 
 1. **选定路线后，完整读取对应子目录的 `SKILL.md`**，按它的流程走，不要用本文件的摘要代替原文规则。
@@ -176,6 +209,7 @@ description: 把内容做成有动效、有设计感的单文件网页 PPT（HTM
 5. **配色不许自由发挥**：路线 B 只能从预设主题里选（Style A 5 套电子墨水、Style B 4 套锚点色，如 IKB 克莱因蓝、柠檬黄、柠檬绿、安全橙）；路线 A 明确禁用紫色渐变 + 白底这类 AI 味审美。
 6. **交付前自检**：浏览器打开逐页翻，检查文字溢出、元素重叠、16:9 画布、图片是否带齐、动画是否可用、是否需要 `prefers-reduced-motion`。
 7. **第四步优先用确定性手段**（V0.05）：脚本 / API / 命令行能完成的不用界面点击；并行无依赖调用；仓库推送前做敏感信息扫描，推送后清除远端地址里的凭据。
+8. **第五步反馈工具按需启用**（V0.06）：只有用户要审改 / 走查 / 圈选反馈时才路由；先按第五步路由表选对工具，别把文档类塞给前端源码工具；工具未安装时说明可选，不阻塞 PPT 主流程。
 
 ## 路线 A · frontend-slides（改旧 PPT / 从主题起步）
 
@@ -215,6 +249,7 @@ description: 把内容做成有动效、有设计感的单文件网页 PPT（HTM
 2. 用了哪条路线、哪种风格、多少页、素材是否完整保留。
 3. **留痕**：第一步的两版优化提示词摘要、第二步的「检索词 / 最高 score / 阈值判定」；**若命中禁止优化清单，明确说明「本轮判定为禁止优化类，未生成两版提示词」及命中的类别**；复合任务补一句第四步用了哪些编排原则（并行 / 任务图 / 脚本优先）与失败恢复情况。
 4. **再提醒一次**：这是网页演示不是 pptx；需要附件可导出 PDF（动画会丢），需要可编辑 PPTX 得换工作流。
+5. **第五步启用说明**（V0.06）：本轮若用户要走查 / 圈选反馈，说明路由到哪个工具（Pinta / Inspecto / human-review / EditHere）及理由；**未启用则一句话带过「本轮无视觉反馈需求，第五步跳过」**。
 
 ## 版本历史
 
@@ -224,7 +259,8 @@ description: 把内容做成有动效、有设计感的单文件网页 PPT（HTM
 | V0.02 | 嫁接「任务前置分流」：任务型请求先用 find-skills 语义检索，`score ≥ 0.90` 直接复用现成技能；列出不检索的对话类型与例外；新增 `references/skill-first-workflow.md` |
 | V0.03 | 把「顶级 AI 提示词架构师」元提示词嫁接为**第一步**：补齐隐性需求、出两版、结构化排版、适配所有智能体并规避逻辑漏洞；优化后的提示词作为后续步骤唯一输入；新增 `references/prompt-architect.md` |
 | V0.04 | 把「不是所有输入都优化」升级为**硬性禁止优化清单**：寒暄致谢 / 纯事实问答·翻译·摘要 / 延续性修改 / 已点名技能或文件 / 只要判断，命中即禁止优化、禁止输出两版模板、禁止检索；补齐任务型清单（下任务、归纳总结、生成、安装、修复、转换、推送、产出文件）；辨析「纯摘要 ≠ 归纳总结」；修正「用户已点名技能或文件」为禁止优化类；用户补充的边界约束原文一字不改入库 |
-| **V0.05** | 嫁接微软 **UFO² Desktop AgentOS / UFO³ Galaxy** 编排范式为**第四步执行层**：两层分工（编排 / 执行）、混合 GUI–API（脚本 API 优先、界面兜底）、推测式批量动作、四阶段闭环（采集 / 决策 / 执行 / 记忆更新）、复合任务 DAG 与结果驱动改写、失败回到上一确定状态；明确「只借鉴方法论、不集成运行时、不复制代码」边界；新增 `references/ufo-execution-paradigm.md`，两个来源链接与 MIT 许可一并标注 |
+| V0.05 | 嫁接微软 **UFO² Desktop AgentOS / UFO³ Galaxy** 编排范式为**第四步执行层**：两层分工（编排 / 执行）、混合 GUI–API（脚本 API 优先、界面兜底）、推测式批量动作、四阶段闭环（采集 / 决策 / 执行 / 记忆更新）、复合任务 DAG 与结果驱动改写、失败回到上一确定状态；明确「只借鉴方法论、不集成运行时、不复制代码」边界；新增 `references/ufo-execution-paradigm.md`，两个来源链接与 MIT 许可一并标注 |
+| **V0.06** | 嫁接**人在回路视觉反馈工具路由**为**第五步**：Pinta（前端源码批注主力，Chrome 扩展 + companion + MCP）/ Inspecto（进阶：跳源码行 + 任务时间线 + prompts.json 自定义工作流）/ human-review（网页 / PPT / Word / 图片文档审改，Skill + npx）/ EditHere（一切画面：截图 / AI 生图 / 视频 / 游戏 HUD，桌面应用 + 坐标 JSON）；固化「文档类不走 Pinta/Inspecto」「Pinta 非 GTK 画图软件」「主力/进阶分明」三条硬规则；明确**本技能保持 Skill 形态、不改成 MCP**（决策层与工具层是上下游）；新增 `references/visual-feedback-routing.md`，四个来源与许可一并标注 |
 
 ## 来源与许可
 
@@ -235,5 +271,9 @@ description: 把内容做成有动效、有设计感的单文件网页 PPT（HTM
 | `frontend-slides/` | <https://github.com/zarazhangrui/frontend-slides> | MIT（见 `frontend-slides/LICENSE`） | 完整副本，含 scripts / assets / references |
 | `guizang-ppt-skill/` | <https://github.com/op7418/guizang-ppt-skill> | AGPL-3.0（见 `guizang-ppt-skill/LICENSE`） | 完整副本，含 scripts / assets / references |
 | 第四步编排范式 | <https://github.com/microsoft/UFO> · 文档 <https://microsoft.github.io/UFO/ufo2/overview/> | MIT | **仅方法论借鉴，未复制任何代码**，详见 `references/ufo-execution-paradigm.md` |
+| 第五步反馈路由 · Pinta | Chrome 扩展 + `pinta-companion` / `pinta-mcp`（教程 <https://www.opcchina.ai/?p=4191>） | 见上游 | **仅路由 + 接入命令说明，未复制代码**，详见 `references/visual-feedback-routing.md` |
+| 第五步反馈路由 · Inspecto | <https://inspecto-dev.github.io/inspecto/zh/> | 见上游 | 同上 |
+| 第五步反馈路由 · human-review | <https://github.com/petergyang/human-review> | MIT | 同上；本技能**不内置**该 Skill，仅记录路由与安装命令 |
+| 第五步反馈路由 · EditHere | <https://github.com/Inginnng/EditHere> | MIT | 同上，桌面应用 + companion skill |
 
-使用、修改、再分发 `guizang-ppt-skill/` 部分时须遵守 AGPL-3.0 的对应义务（含源码开放要求）。各子目录内的 README、SPONSORS、来源说明均原样保留。UFO 相关商标归微软所有，本仓库仅作学术与工程范式的来源标注。
+使用、修改、再分发 `guizang-ppt-skill/` 部分时须遵守 AGPL-3.0 的对应义务（含源码开放要求）。各子目录内的 README、SPONSORS、来源说明均原样保留。UFO 相关商标归微软所有，本仓库仅作学术与工程范式的来源标注。第五步四个工具均为**外部可选依赖**：本仓库不复制其代码、不内置其运行时，只记录「什么任务用什么工具」的路由规则与官方接入方式；是否安装由用户决定，未安装不影响前四步与两条 PPT 路线。
