@@ -223,3 +223,7 @@ V0.06；新增 references/visual-feedback-routing.md；主 SKILL 与 README 更�
 | visual annotation agent edit source code tool routing mcp skill | 0.050 | 0 | < 0.60，自主实现 |
 
 结论：**无高相似现成技能**，按 V0.02 规则自主完成 V0.06 迭代。四个工具通过官方文档 / 教程直接核实，未复制到仓库。
+
+## 9. V0.07 衔接补充（第三步分叉）
+
+V0.07 在第三步新增「中间分叉」，位于第五步之前：分叉只决定「走哪条路线 / 哪种风格」，与第五步「交付后改什么用什么工具」是两个独立环节，互不触发。分叉选定路线后正常交付，交付后如需圈选审改再进第五步；不因走了分叉就跳过或强制启用第五步。本细则记录的四工具路由与 MCP 判定不受 V0.07 影响，本技能仍保持 Skill 形态。衔接细则见 `references/decision-fork.md`。
