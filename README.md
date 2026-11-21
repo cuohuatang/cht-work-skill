@@ -1,10 +1,27 @@
 # cht-work-skill
 
-> **当前版本：V0.09** ｜ V0.01 合并两技能 → V0.02 嫁接「先复用后自造」→ V0.03 把「提示词优化」前置为第一步 → V0.04 把「禁止优化」升级为硬约束 → V0.05 嫁接微软 UFO² / UFO³ 执行编排范式作为第四步 → V0.06 嫁接「人在回路视觉反馈工具路由」作为第五步（Pinta / Inspecto / human-review / EditHere）→ V0.07 在第三步加入「低置信度分叉让用户选」→ V0.08 在第四步嫁接 Ponytail 七级代码最小化阶梯 → **V0.09 在最上游加入可选「素材工作台」：腾讯 WeKnora 把散落多格式素材整理成可检索、带引用的知识**。
+> **当前版本：V0.10** ｜ V0.01 合并两技能 → V0.02 嫁接「先复用后自造」→ V0.03 把「提示词优化」前置为第一步 → V0.04 把「禁止优化」升级为硬约束 → V0.05 嫁接微软 UFO² / UFO³ 执行编排范式作为第四步 → V0.06 嫁接「人在回路视觉反馈工具路由」作为第五步（Pinta / Inspecto / human-review / EditHere）→ V0.07 在第三步加入「低置信度分叉让用户选」→ V0.08 在第四步嫁接 Ponytail 七级代码最小化阶梯 → V0.09 在最上游加入可选「素材工作台」：腾讯 WeKnora 把散落多格式素材整理成可检索、带引用的知识 → **V0.10 把每项能力封装成 12 个中文快捷按钮，随仓库分发、一键安装、支持项目速记，不用记英文 / 不用先打开技能**。
 
 > **形态说明**：本技能**保持 Skill 形态，不改成 MCP**。它是决策 / 编排层，MCP 是工具 / 能力层，两者是上下游；四工具形态不统一，无一要求本技能转型。理由见文末与 `references/visual-feedback-routing.md` 第 6 节。
 
 把两个高星网页 PPT 技能合并成一个入口：**有旧 PPT 就翻新，没旧 PPT 就从零做**。现在还顺手解决另外两个问题：**不会写提示词也能让 AI 干活，但不是所有输入都要优化提示词**；以及**选定方案之后怎么把活可靠地干完**（第四步执行编排）。
+
+## 快捷按钮（V0.10 · 12 个中文 slash commands）
+
+每项能力一个按钮，**敲按钮即触发，不用记英文、不用先手动打开技能**。完整清单、适用边界、安装排错见 `references/quick-commands.md`。
+
+| 类别 | 按钮 | 对应能力 |
+| --- | --- | --- |
+| 总入口 | `/ppt` · `/改` · `/fix` | 六步全流程 / 统一选择框（含速记）/ 英文保底 |
+| 两路线 | `/改旧PPT` · `/从零做` | frontend-slides 翻新 / guizang-ppt-skill 从零做 |
+| 前段 | `/理素材` · `/优化提示词` · `/找技能` | WeKnora / 提示词架构师 / find-skills |
+| 反馈四工具 | `/改网页` · `/跳源码` · `/改文档` · `/改画面` | Pinta / Inspecto / human-review / EditHere |
+
+**安装**：仓库根目录 `bash scripts/install-commands.sh` → 装到 `~/.codebuddy/commands/` → 会话执行 `/reload-plugins` 生效。
+
+**项目速记**：`/改 报价器按钮改成蓝色`——首次报一次项目路径，之后只说项目名即直达、跳过选择框；记录存 `~/.codebuddy/command-projects.md`（模板 `commands/项目速记-示例.md`）。
+
+**三条铁律**：① 按钮即入口，命令内含技能调用，没有"先打开技能"这一步；② 按钮不拆技能，本体与两个子技能完整保留；③ 中文名不被客户端识别时用 `/fix`。
 
 ## 完整流程（第一步就是优化提示词，但先过硬约束）
 
@@ -248,7 +265,16 @@ cht-work-skill/
 │   ├── visual-feedback-routing.md# 第五步细则（V0.06）：Pinta/Inspecto/human-review/EditHere 路由、接入命令、MCP 判定
 │   ├── decision-fork.md         # 第三步细则（V0.07）：分叉触发条件、呈现规范、选它会得到什么、兜底
 │   ├── ponytail-minimal-code.md # 第四步细则（V0.08）：七级阶梯、两级防重造、四档模式、诚实数据口径
-│   └── weknora-knowledge-workbench.md # 第零步细则（V0.09）：素材工作台启用判定、能力对照、边界与许可口径
+│   ├── weknora-knowledge-workbench.md # 第零步细则（V0.09）：素材工作台启用判定、能力对照、边界与许可口径
+│   └── quick-commands.md         # 按钮细则（V0.10）：12 按钮清单、适用边界、安装排错、项目速记
+├── commands/                     # 12 个中文快捷按钮（V0.10，slash commands，随仓库分发）
+│   ├── ppt.md / 改.md / fix.md           # 总入口
+│   ├── 改旧PPT.md / 从零做.md             # PPT 两路线
+│   ├── 理素材.md / 优化提示词.md / 找技能.md # 前段能力
+│   ├── 改网页.md / 跳源码.md / 改文档.md / 改画面.md # 反馈四工具
+│   └── 项目速记-示例.md           # 项目速记表模板（安装时跳过）
+├── scripts/
+│   └── install-commands.sh       # 一键把 12 按钮装到 ~/.codebuddy/commands/
 ├── frontend-slides/              # 上游完整副本（MIT）
 │   ├── SKILL.md
 │   ├── STYLE_PRESETS.md
@@ -286,6 +312,8 @@ cht-work-skill/
 14. 别逢事就分叉让用户选（V0.07）：只在判定模糊时弹选项，确定性高就直达；分叉选项必须写清「选它会得到什么」，别给「方案 A / 方案 B」这种选完还不知道拿到什么的东西。
 15. 别把「精简」做成「阉割」（V0.08）：写代码前过七级阶梯，但校验 / 安全 / 可访问性 / 错误处理不砍；也别把「Token 降 94%」当事实转述——那是重造轮子任务的代码量峰值，官方 v5 是代码 -53% / Token -45%。
 16. 别为做 PPT 去部署 WeKnora（V0.09）：素材单一就用路线脚本；它只是可选上游工作台，不内置、不强制安装；许可也别说成纯 MIT（主体 MIT + 第三方组件各自许可）。
+17. 别以为要先「打开技能」再敲按钮（V0.10）：按钮本身就调用技能，敲 `/改` 即干活；按钮是入口、不是拆解，本体与两个子技能完整保留。
+18. 别把中文命令名不显示当成坏了（V0.10）：客户端斜杠解析器可能不认中文名，用英文保底 `/fix`；新按钮需 `/reload-plugins` 才生效。
 
 ## 许可说明
 
@@ -299,5 +327,6 @@ cht-work-skill/
 | Pinta（`pinta-companion` / `pinta-mcp`）· Inspecto · <https://github.com/petergyang/human-review>（MIT）· <https://github.com/Inginnng/EditHere>（MIT） | 见各上游 | **仅路由与官方接入命令说明，未复制代码、未内置运行时**；是否安装由用户决定 |
 | <https://github.com/DietrichGebert/ponytail> | MIT | **仅方法论借鉴（七级代码最小化阶梯），未复制代码、未引入插件钩子命令**，详见 `references/ponytail-minimal-code.md` |
 | <https://github.com/Tencent/WeKnora> · 文档 <https://weknora.weixin.qq.com/docs/01-getting-started/01-introduction> | 主体 MIT，第三方组件各自许可（官方 LICENSE；API 标记 NOASSERTION） | **仅能力路由说明，未部署、未内置运行时、未复制代码**，详见 `references/weknora-knowledge-workbench.md` |
+| 12 个快捷按钮 `commands/*.md` + `scripts/install-commands.sh` | 本仓库原创 | 按钮是本技能能力的入口封装，**未引入外部代码 / 依赖**，详见 `references/quick-commands.md` |
 
 各子目录内的 LICENSE、README、SPONSORS 与来源说明均原样保留。UFO 相关商标归微软所有。第五步四工具的商标与名称归各自作者所有，本仓库仅作工具路由的来源标注。
