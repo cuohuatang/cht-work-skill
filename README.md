@@ -1,6 +1,6 @@
 # cht-work-skill
 
-> **当前版本：V0.08** ｜ V0.01 合并两技能 → V0.02 嫁接「先复用后自造」→ V0.03 把「提示词优化」前置为第一步 → V0.04 把「禁止优化」升级为硬约束 → V0.05 嫁接微软 UFO² / UFO³ 执行编排范式作为第四步 → V0.06 嫁接「人在回路视觉反馈工具路由」作为第五步（Pinta / Inspecto / human-review / EditHere）→ V0.07 在第三步加入「低置信度分叉让用户选」，选项强制说清「选它会得到什么」→ **V0.08 在第四步嫁接 Ponytail 七级代码最小化阶梯，与第二步形成两级防重造轮子**。
+> **当前版本：V0.09** ｜ V0.01 合并两技能 → V0.02 嫁接「先复用后自造」→ V0.03 把「提示词优化」前置为第一步 → V0.04 把「禁止优化」升级为硬约束 → V0.05 嫁接微软 UFO² / UFO³ 执行编排范式作为第四步 → V0.06 嫁接「人在回路视觉反馈工具路由」作为第五步（Pinta / Inspecto / human-review / EditHere）→ V0.07 在第三步加入「低置信度分叉让用户选」→ V0.08 在第四步嫁接 Ponytail 七级代码最小化阶梯 → **V0.09 在最上游加入可选「素材工作台」：腾讯 WeKnora 把散落多格式素材整理成可检索、带引用的知识**。
 
 > **形态说明**：本技能**保持 Skill 形态，不改成 MCP**。它是决策 / 编排层，MCP 是工具 / 能力层，两者是上下游；四工具形态不统一，无一要求本技能转型。理由见文末与 `references/visual-feedback-routing.md` 第 6 节。
 
@@ -10,6 +10,10 @@
 
 ```
 用户消息
+   ↓
+第零步 · 素材工作台（V0.09，可选）
+   素材散落多格式（PDF/Word/网页/飞书/Notion）→ 可选 WeKnora 整理成可检索、带引用的知识
+   单一素材直接用路线脚本，不部署 / 不内置 / 不要求安装
    ↓
 执行前判定 · 禁止优化清单（硬约束）
    命中 → 禁止优化、禁止输出两版模板、禁止检索 → 直接回应 / 直接执行【结束】
@@ -52,6 +56,18 @@
 **每个分叉选项必填四字段**：选项名 ｜ **选它会得到什么（产出物 / 风格 / 适合谁，禁写「更高级」这类形容词）** ｜ 推荐标记（附一句为什么）｜ 兜底（用户不选就走推荐项，绝不停下等）。分叉不改变禁止优化判定：延续性修改即使分叉定位「这里」，也不生成两版提示词。完整规范、标准输出骨架与实跑留痕见 `references/decision-fork.md`。
 
 > V0.07 实测留痕：本条为延续性修改 + 点名对象，命中禁止优化硬约束，且属自迭代工程任务（不在网页 PPT 路由域）→ 未生成两版提示词、未走技能检索、本轮自身不触发分叉，直接落地文件；无高相似现成技能可复用。
+
+## V0.09 新增：第零步素材工作台（可选，嫁接 WeKnora）
+
+来源 <https://github.com/Tencent/WeKnora>（腾讯微信团队开源，约 3.8 万星；截图流传的「2.6 万」是旧数据）。它把原始文档变成「可查询 RAG + 自主 Agent + 自维护 Wiki」，本技能只在**素材散落多格式**时把它当可选上游工作台，与两条 PPT 路线正交，不新增路线。
+
+**启用**：多格式混合（PDF / 扫描件 OCR / Office / 网页 / 图片）/ 散落多平台（飞书 / Notion / 语雀 / Confluence 等）/ 要先理大纲找依据 / 要带引用核实数据 / 素材量大。**不启用**：单一旧 PPTX、一份文章、明确主题（路线脚本更快）、纯判断问答、命中禁止优化清单。
+
+能力：多格式解析 + 混合检索（向量 + BM25 + Rerank + 可选知识图谱）+ 带引用回答 + 切片可编辑/diff/回滚 + 自动 Wiki + 内置 MCP Server。**边界**：不部署、不内置运行时、不要求用户安装（Go+Vue+docreader+PG/ES/Redis 重型系统，Lite 才是单二进制）；有实例才用，没有走本地脚本，不阻塞主流程。
+
+> ⚠️ **许可口径**：官方 LICENSE 原文「主体 MIT，列出的第三方组件保留各自许可」，GitHub API 因此标记 `NOASSERTION`——别说成纯 MIT。星数以 GitHub API 实测约 3.8 万为准。细节见 `references/weknora-knowledge-workbench.md`。
+
+> V0.09 实测留痕：本条属任务型（下任务 + 嫁接 + 迭代升级），未命中禁止清单，**不属于网页 PPT 路由域**；两组检索最高 score 均 0.050（< 0.60），无高相似现成技能，故自主实现。
 
 ## V0.08 新增：第四步代码最小化阶梯（嫁接 Ponytail）
 
@@ -231,7 +247,8 @@ cht-work-skill/
 │   ├── ufo-execution-paradigm.md # 第四步细则（V0.05）：UFO²/UFO³ 术语、转译表、诚实边界、实跑留痕
 │   ├── visual-feedback-routing.md# 第五步细则（V0.06）：Pinta/Inspecto/human-review/EditHere 路由、接入命令、MCP 判定
 │   ├── decision-fork.md         # 第三步细则（V0.07）：分叉触发条件、呈现规范、选它会得到什么、兜底
-│   └── ponytail-minimal-code.md # 第四步细则（V0.08）：七级阶梯、两级防重造、四档模式、诚实数据口径
+│   ├── ponytail-minimal-code.md # 第四步细则（V0.08）：七级阶梯、两级防重造、四档模式、诚实数据口径
+│   └── weknora-knowledge-workbench.md # 第零步细则（V0.09）：素材工作台启用判定、能力对照、边界与许可口径
 ├── frontend-slides/              # 上游完整副本（MIT）
 │   ├── SKILL.md
 │   ├── STYLE_PRESETS.md
@@ -268,6 +285,7 @@ cht-work-skill/
 13. 别为了「高级」把本技能改成 MCP：决策层与工具层是上下游，四工具形态也不统一。
 14. 别逢事就分叉让用户选（V0.07）：只在判定模糊时弹选项，确定性高就直达；分叉选项必须写清「选它会得到什么」，别给「方案 A / 方案 B」这种选完还不知道拿到什么的东西。
 15. 别把「精简」做成「阉割」（V0.08）：写代码前过七级阶梯，但校验 / 安全 / 可访问性 / 错误处理不砍；也别把「Token 降 94%」当事实转述——那是重造轮子任务的代码量峰值，官方 v5 是代码 -53% / Token -45%。
+16. 别为做 PPT 去部署 WeKnora（V0.09）：素材单一就用路线脚本；它只是可选上游工作台，不内置、不强制安装；许可也别说成纯 MIT（主体 MIT + 第三方组件各自许可）。
 
 ## 许可说明
 
@@ -280,5 +298,6 @@ cht-work-skill/
 | <https://github.com/microsoft/UFO> · <https://microsoft.github.io/UFO/ufo2/overview/> | MIT | **仅方法论借鉴，未复制任何代码**，仅作范式来源标注 |
 | Pinta（`pinta-companion` / `pinta-mcp`）· Inspecto · <https://github.com/petergyang/human-review>（MIT）· <https://github.com/Inginnng/EditHere>（MIT） | 见各上游 | **仅路由与官方接入命令说明，未复制代码、未内置运行时**；是否安装由用户决定 |
 | <https://github.com/DietrichGebert/ponytail> | MIT | **仅方法论借鉴（七级代码最小化阶梯），未复制代码、未引入插件钩子命令**，详见 `references/ponytail-minimal-code.md` |
+| <https://github.com/Tencent/WeKnora> · 文档 <https://weknora.weixin.qq.com/docs/01-getting-started/01-introduction> | 主体 MIT，第三方组件各自许可（官方 LICENSE；API 标记 NOASSERTION） | **仅能力路由说明，未部署、未内置运行时、未复制代码**，详见 `references/weknora-knowledge-workbench.md` |
 
 各子目录内的 LICENSE、README、SPONSORS 与来源说明均原样保留。UFO 相关商标归微软所有。第五步四工具的商标与名称归各自作者所有，本仓库仅作工具路由的来源标注。
